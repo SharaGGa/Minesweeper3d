@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: aba20ae206712e344bfedebf4824f694
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - numberSpawn: {instanceID: 0}
+  - flag: {fileID: 2215827381336559069, guid: 3d27376d35a5d8447b8b546f0da86f78, type: 3}
+  - closedCell: {fileID: 6139835201482887169, guid: 82f326426768f784d99844f65c7c0f79, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
