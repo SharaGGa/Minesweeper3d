@@ -14,9 +14,9 @@ public class Cell : MonoBehaviour
     [SerializeField] private bool isFlagged;
     [SerializeField] public int Number;
     [SerializeField] private GameObject closedCell;
-    [SerializeField] private bool isOpen;
+    [SerializeField] public bool isOpen;
     [SerializeField] private GenerateField genField;
-    [SerializeField] private Vector2Int genPos;
+    [SerializeField] public Vector2Int genPos;
 
     public void SetNumber(int num) => Number = num;
     public void Gen(GenerateField genField, Vector2Int genPos)
@@ -47,12 +47,15 @@ public class Cell : MonoBehaviour
             genField.openEmpty(genPos);
         }
         if (Number > 0 && Number < numbers.Length + 1)
+        {
             Instantiate(numbers[Number - 1], numberSpawn.position, Quaternion.identity, numberSpawn);
+        }
         if (Number < 0)
         {
             Instantiate(Mine, numberSpawn.position, Quaternion.identity, numberSpawn);
-            genField.OpenMap();
+            genField.GameOver();
         }
+        genField.CellOpened();
 
     }
     void FlagCell()

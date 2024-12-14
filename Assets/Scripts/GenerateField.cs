@@ -15,16 +15,28 @@ public class GenerateField : MonoBehaviour
     [SerializeField] private bool isMine = true;
     [SerializeField] GameObject gmvr;
     [SerializeField] GameObject gmvr1;
+    [SerializeField] GameObject WinScreen;
+    private int openedCellsCount = 0;
+    private bool isGameOver = false;
 
     void Start()
     {
         gmvr.SetActive(false);
         gmvr1.SetActive(false);
+        WinScreen.SetActive(false);
         intMap = new int[SizeMap.x, SizeMap.y];
         cellMap = new Cell[SizeMap.x, SizeMap.y];
         genMines();
         genNumbers();
         genRealMap();
+    }
+    public void GameOver() // New GameOver function
+    {
+        if (!isGameOver) // Prevent multiple calls
+        {
+            isGameOver = true;
+            OpenMap();
+        }
     }
     public void OpenMap()
     {
@@ -39,6 +51,23 @@ public class GenerateField : MonoBehaviour
                     isMine = false;
                     gmvr.SetActive(true);
                     gmvr1.SetActive(true);
+
+                }
+
+            }
+        }
+    }
+    public void OpenMapWin()
+    {
+        if (isMine)
+        {
+            for (int x = 0; x < SizeMap.x; x++)
+            {
+                for (int y = 0; y < SizeMap.y; y++)
+                {
+                    if (intMap[x, y] < -900)
+                        cellMap[x, y].OpenCell();
+                    isMine = false;
 
                 }
 
@@ -109,7 +138,9 @@ public class GenerateField : MonoBehaviour
         bool isSpaceX = origin.x + offset.x <= intMap.GetLength(0) - 1 && origin.x + offset.x >= 0;
         bool isSpacey = origin.y + offset.y <= intMap.GetLength(1) - 1 && origin.y + offset.y >= 0;
         if (isSpaceX && isSpacey)
+        {
             cellMap[origin.x + offset.x, origin.y + offset.y].OpenCell();
+        }
     }
     void genRealMap()
     {
@@ -127,5 +158,36 @@ public class GenerateField : MonoBehaviour
         }
 
 
+    }
+
+    public void CellOpened()
+    {
+        if (intMap[cellMap[0, 0].genPos.x, cellMap[0, 0].genPos.y] >= 0) { openedCellsCount++; } //only increment for safe cells
+        CheckForWin();
+    }
+
+    void CheckForWin()
+    {
+        if (!isGameOver)
+        { // Only check for win if the game isn't over
+            int totalSafeCells = SizeMap.x * SizeMap.y - minesCount;
+            int openedSafeCells = 0;
+            for (int x = 0; x < SizeMap.x; x++)
+            {
+                for (int y = 0; y < SizeMap.y; y++)
+                {
+                    if (intMap[x, y] >= 0 && cellMap[x, y].isOpen)
+                    {
+                        openedSafeCells++;
+                    }
+                }
+            }
+            if (openedSafeCells == totalSafeCells)
+            {
+                gmvr.SetActive(true);
+                WinScreen.SetActive(true);
+                OpenMapWin();
+            }
+        }
     }
 }
